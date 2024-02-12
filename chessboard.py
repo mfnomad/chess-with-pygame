@@ -15,16 +15,24 @@ class Chessboard:
         self.files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
         self.ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
         self.square_mapping = self.create_square_mapping()
+        self.square_index_mapping = self.create_square_index_mapping()
 
+    def create_square_index_mapping(self):
+        index_mapping = {}
+        for rank in self.ranks:
+            for file in self.files:
+                index_mapping[file + rank] = (self.files.index(file), self.ranks.index(rank))
+        return index_mapping
+    
     def create_square_mapping(self):
         square_mapping = {}
-        start_y = 47
+        start_y = 365
         for rank in self.ranks:
-            start_x = 48
+            start_x = 47
             for file in self.files:
                 square_mapping[file + rank] = (start_x, start_y)
                 start_x += 45
-            start_y += 45
+            start_y -= 45
         
         return square_mapping
 
@@ -41,23 +49,23 @@ class Chessboard:
     ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
 ]
         piece_mapping  = {
-            'p' : Pawn(Chessboard.PlayerColor.BLACK, IsPawnsFirstMove=True ),
-            'P' : Pawn(Chessboard.PlayerColor.WHITE, IsPawnsFirstMove=True ),
+            'p' : Pawn(Chessboard.PlayerColor.WHITE, IsPawnsFirstMove=True ),
+            'P' : Pawn(Chessboard.PlayerColor.BLACK, IsPawnsFirstMove=True ),
             
-            'r' : Rook(Chessboard.PlayerColor.BLACK),
-            'R' : Rook(Chessboard.PlayerColor.WHITE),
+            'r' : Rook(Chessboard.PlayerColor.WHITE),
+            'R' : Rook(Chessboard.PlayerColor.BLACK),
             
-            'n' : Knight(Chessboard.PlayerColor.BLACK),
-            'N' : Knight(Chessboard.PlayerColor.WHITE),
+            'n' : Knight(Chessboard.PlayerColor.WHITE),
+            'N' : Knight(Chessboard.PlayerColor.BLACK),
 
-            'b' : Bishop(Chessboard.PlayerColor.BLACK),
-            'B' : Bishop(Chessboard.PlayerColor.WHITE),
+            'b' : Bishop(Chessboard.PlayerColor.WHITE),
+            'B' : Bishop(Chessboard.PlayerColor.BLACK),
 
-            'q' : Queen(Chessboard.PlayerColor.BLACK),
-            'Q' : Queen(Chessboard.PlayerColor.WHITE),
+            'q' : Queen(Chessboard.PlayerColor.WHITE),
+            'Q' : Queen(Chessboard.PlayerColor.BLACK),
 
-            'k' : King(Chessboard.PlayerColor.BLACK, isCheck=False, isCheckMate=False),
-            'K' : King(Chessboard.PlayerColor.WHITE, isCheck=False, isCheckMate=False),
+            'k' : King(Chessboard.PlayerColor.WHITE, isCheck=False, isCheckMate=False),
+            'K' : King(Chessboard.PlayerColor.BLACK, isCheck=False, isCheckMate=False),
 
             ' ' : None
 
