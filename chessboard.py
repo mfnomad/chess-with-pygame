@@ -16,6 +16,7 @@ class Chessboard:
         self.ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
         self.square_mapping = self.create_square_mapping()
         self.square_index_mapping = self.create_square_index_mapping()
+        self.square_mapping_coordinates = self.create_square_per_coordinates()
 
     def create_square_index_mapping(self):
         index_mapping = {}
@@ -35,6 +36,20 @@ class Chessboard:
             start_y -= 45
         
         return square_mapping
+    
+    def create_square_per_coordinates(self):
+        square_mapping_per_coordinates = {}
+        start_y = 365
+        for rank in self.ranks:
+            start_x = 47
+            for file in self.files:
+                square_mapping_per_coordinates[(start_x, start_y)] = file + rank
+                start_x += 45
+            start_y -= 45
+        return square_mapping_per_coordinates
+
+
+
 
     @staticmethod
     def initialChessboardState():

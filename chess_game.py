@@ -32,13 +32,18 @@ class Chessgame:
 
 #pygame inits################################################
 pygame.init()
-screen = pygame.display.set_mode((457, 457))
+WIDTH, HEIGHT = 450, 450
+SQUARE_SIZE = 50
+WHITE = (255, 255, 255)
+BLACK = (0, 204, 102)
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Chess by Mati")
 clock = pygame.time.Clock()
 #############################################################
 
 ### images ######################
-background_image = pygame.image.load("chessboard_3.png")
+background_image = pygame.image.load("chessboard_coordinates.png")
 w_pawn_image = pygame.image.load("pieces_icons_white/P60.png")  
 w_rook_image = pygame.image.load("pieces_icons_white/R60.png")
 w_knight_image = pygame.image.load("pieces_icons_white/N60.png")
@@ -92,18 +97,20 @@ running = True
 
 
 
-while running:
-    
-    
-    screen.fill("purple")
-    # TODO: fix background image
+while running:    
     screen.blit(background_image, (0,0))
     
-    
-    start_y = 361
-    
+    for row in range(8):
+        for col in range(8):
+            x = col * SQUARE_SIZE
+            y = row * SQUARE_SIZE
+            color = WHITE if (row + col) % 2 == 0 else BLACK
+            pygame.draw.rect(screen, color, (x,y, SQUARE_SIZE, SQUARE_SIZE))
+
+
+    start_y = 350
     for rank in cb.ranks:
-        start_x = 44
+        start_x = 0
         for file in cb.files:
             piece = initial_cb[cb.square_index_mapping[file + rank][1]][cb.square_index_mapping[file + rank][0]]
             
@@ -140,12 +147,9 @@ while running:
             
                 screen.blit(piece_image, (start_x, start_y))
             
-            
-
-            #pygame.draw.rect(screen, "red", [start_x, start_y, 45, 45], 1)
-            start_x += 46
-        start_y -= 45
-        #running = False
+            start_x += 50
+        start_y -= 50
+        
         
 
     
@@ -155,7 +159,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print('mouseclicked')
+            print('Square clicked: a1 with coordinates: ', cb.square_mapping['a1'])
+        print(event)
             
         
 
