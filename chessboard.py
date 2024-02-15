@@ -1,5 +1,6 @@
 from enum import Enum
 from chesspieces import Pawn, Rook, Bishop, Knight, Queen, King
+from square import Square
 
 
 class Chessboard:
@@ -9,63 +10,17 @@ class Chessboard:
         BLACK = 2
     
     def __init__(self, boardState, isGameOver):
-        self.boardState = boardState
-        self.isGameOver = isGameOver
-
+        self.squarePieceMapping = self.createSquarePieceMapping()
+        self.board = [[None for _ in range(8)] for _ in range(8)]
         self.files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
         self.ranks = ['1', '2', '3', '4', '5', '6', '7', '8']
-        self.square_mapping = self.create_square_mapping()
-        self.square_index_mapping = self.create_square_index_mapping()
-        self.square_mapping_coordinates = self.create_square_per_coordinates()
-
-    def create_square_index_mapping(self):
-        index_mapping = {}
-        for rank in self.ranks:
-            for file in self.files:
-                index_mapping[file + rank] = (self.files.index(file), self.ranks.index(rank))
-        return index_mapping
-    
-    def create_square_mapping(self):
-        square_mapping = {}
-        start_y = 365
-        for rank in self.ranks:
-            start_x = 47
-            for file in self.files:
-                square_mapping[file + rank] = (start_x, start_y)
-                start_x += 45
-            start_y -= 45
+        self.initializeBoard()
         
-        return square_mapping
-    
-    def create_square_per_coordinates(self):
-        square_mapping_per_coordinates = {}
-        start_y = 365
-        for rank in self.ranks:
-            start_x = 47
-            for file in self.files:
-                square_mapping_per_coordinates[(start_x, start_y)] = file + rank
-                start_x += 45
-            start_y -= 45
-        return square_mapping_per_coordinates
 
-
-
-
-    @staticmethod
-    def initialChessboardState():
-        initial_chessboard = [
-    ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-    ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-    ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
-]
+    def createSquarePieceMapping(self):
         piece_mapping  = {
-            'p' : Pawn(Chessboard.PlayerColor.WHITE, IsPawnsFirstMove=True ),
-            'P' : Pawn(Chessboard.PlayerColor.BLACK, IsPawnsFirstMove=True ),
+            'p' : Pawn(Chessboard.PlayerColor.WHITE),
+            'P' : Pawn(Chessboard.PlayerColor.BLACK),
             
             'r' : Rook(Chessboard.PlayerColor.WHITE),
             'R' : Rook(Chessboard.PlayerColor.BLACK),
@@ -79,19 +34,50 @@ class Chessboard:
             'q' : Queen(Chessboard.PlayerColor.WHITE),
             'Q' : Queen(Chessboard.PlayerColor.BLACK),
 
-            'k' : King(Chessboard.PlayerColor.WHITE, isCheck=False, isCheckMate=False),
-            'K' : King(Chessboard.PlayerColor.BLACK, isCheck=False, isCheckMate=False),
+            'k' : King(Chessboard.PlayerColor.WHITE),
+            'K' : King(Chessboard.PlayerColor.BLACK),
 
             ' ' : None
 
         }
-
-        chessboard = [[piece_mapping[piece] for piece in row] for row in initial_chessboard]
-
-        return chessboard
+        return piece_mapping
     
     def initializeBoard(self):
-        self.boardState = Chessboard.initialChessboardState()
+        initial_chessboard = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ]
+        place_y = 7
+        for row in range(8):
+            place_x = 0
+            for col in range(8):
+                
+                piece_symbol = initial_chessboard[row][col]                
+                file_Rank = self.files[col] + self.ranks[row]
+                square = Square(file_rank= file_Rank, x=place_x, y=place_y)
+                
+                if piece_symbol != ' ':
+                    piece = self.squarePieceMapping[piece_symbol]
+                    square.occupy(piece)
+                    
+                self.board[col][row] = square
+                place_x += 1
+            place_y -= 1
+
+
+
+
+
+
+
+    
+    
 
     def getAlgebraicNotation():
         algebraic_notation = [
