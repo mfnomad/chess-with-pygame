@@ -15,6 +15,7 @@ class Square:
         self.abs_x = self.x * SQUARE_SIZE
         self.abs_y = self.y * SQUARE_SIZE
         self.occupied_by = None
+        
         self.squareColor = WHITE if (x + y) % 2 == 0 else BLACK
 
 
