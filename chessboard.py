@@ -33,14 +33,26 @@ class Chessboard:
         self.ranks = ['8', '7', '6', '5', '4', '3', '2', '1']
         self.squares = self.generateSquares()
         self.setupBoard()
-        
+
+    def areCoordinatesInSquare(self, mouse_x, mouse_y, square):
+        return square.rect.collidepoint(mouse_x, mouse_y)
+    
+    def getClickedOnSquare(self, mouse_x, mouse_y):
+        for row in range(8):
+                for col in range(8):
+                    square = self.board[row][col]
+                    if(self.areCoordinatesInSquare(mouse_x, mouse_y, square)):
+                        return square
+        return None
+
+            
+
     def generateSquares(self):
         squares = []
         for y in range(8):
             row = []
             for x in range(8):
                 fileRank = self.files[x] + self.ranks[y]
-                print("constructing square with fileRank: ", fileRank, "x = ", x, "y= ", y)
                 square = Square(file_rank=fileRank,x=x,y=y)
                 row.append(square)
             squares.append(row)
@@ -53,9 +65,6 @@ class Chessboard:
                 if piece_symbol != ' ':
                     piece = self.squarePieceMapping[piece_symbol]
                     self.squares[y][x].occupy(piece)
-                    print("filerank:", self.squares[y][x].file_rank)
-                    print("is occupied by: ", self.squares[y][x].occupied_by)
-                    print("with color: ", self.squares[y][x].occupied_by.color)
                 
                 self.board[y][x] = self.squares[y][x]
             
@@ -99,9 +108,17 @@ class Chessboard:
             
                 square = self.board[row][col]
                 if square.is_occupied():
-                    pygame.draw.rect(screen, square.squareColor, (square.abs_x, square.abs_y, SQUARE_SIZE, SQUARE_SIZE))
+                    #pygame.draw.rect(screen, square.squareColor, (square.abs_x, square.abs_y, SQUARE_SIZE, SQUARE_SIZE))
                     screen.blit(square.occupied_by.image, (square.abs_x, square.abs_y))
 
+    def updateDisplay(self, screen):
+        for row in range(8):
+            for col in range(8):
+                square = self.board[row][col]
+                if square.occupied_by is not None:
+                    screen.blit(square.occupied_by.image, (square.abs_x, square.abs_y))
+
+        
 
                   
 
